@@ -37,7 +37,6 @@ jobs:
       #         docker push ${{ env.IMAGE_NAME }}:master
 
       run-cypress:
-        needs: ['push-dockerized-react-image']
         runs-on: ubuntu-latest
         permissions:
           contents: read
