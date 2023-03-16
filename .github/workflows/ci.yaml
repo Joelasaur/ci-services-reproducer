@@ -40,7 +40,7 @@ jobs:
         runs-on: ubuntu-latest
         permissions:
           contents: read
-        container: cypress/browsers:node16.14.0-chrome99-ff97
+        # container: cypress/browsers:node16.14.0-chrome99-ff97
         services:
           react-app: 
             # Apparently global env variables don't work across jobs in github actions
@@ -56,7 +56,7 @@ jobs:
           
           - name: Change cache permissions 
             run: chown -R 1001:1001 /github/home/.cache && echo "Changing cachce permissions"
-            
+
           - name: 'Checkout GitHub Action'
             uses: actions/checkout@master
 
