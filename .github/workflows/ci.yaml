@@ -6,12 +6,25 @@ on:
       - master
   workflow_dispatch:
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
       push-dockerized-react-image:
         runs-on: ubuntu-latest
+        permissions:
+          contents: read
+          packages: write
         steps:
           - name: 'Checkout GitHub Action'
             uses: actions/checkout@master
+
+          - name: Docker meta
+            id: meta
+            uses: docker/metadata-action@v4
+            with:
+              images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
           - name: 'Login to GitHub Container Registry'
             uses: docker/login-action@v1
@@ -20,10 +33,13 @@ jobs:
               username: ${{github.actor}}
               password: ${{secrets.GITHUB_TOKEN}}
 
-          - name: 'Build React Image'
-            run: |
-              docker build . --tag ghcr.io/joelasaur/dockerized-react:latest
-              docker push ghcr.io/joelasaur/dockerized-react:latest
+          - name: 'Build and Push React Image'
+            uses: docker/build-push-action@v4
+            with:
+              context: .
+              push: true
+              tags: ${{ steps.meta.outputs.tags }}
+              labels: ${{ steps.meta.outputs.labels }}
 
       run-cypress:
         needs: ['push-dockerized-react-image']
@@ -31,7 +47,7 @@ jobs:
         container: cypress/browsers:node16.14.0-chrome99-ff97
         services:
           react-app: 
-            image: ghcr.io/joelasaur/dockerized-react:latest
+            image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
             credentials:
               username: ${{github.actor}}
               password: ${{secrets.GITHUB_TOKEN}}
