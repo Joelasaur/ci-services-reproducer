@@ -22,16 +22,16 @@ jobs:
 
           - name: 'Build Inventory Image'
             run: |
-              docker build . --tag ghcr.io/Joelasaur/dockerized-react:latest
-              docker push ghcr.io/Joelasaur/dockerized-react:latest
-              
+              docker build . --tag ghcr.io/joelasaur/dockerized-react:latest
+              docker push ghcr.io/joelasaur/dockerized-react:latest
+
       run-cypress:
         needs: ['push-dockerized-react-image']
         runs-on: ubuntu-latest
         container: cypress/browsers:node16.14.0-chrome99-ff97
         services:
           react-app: 
-            image: ghcr.io/Joelasaur/dockerized-react:latest
+            image: ghcr.io/joelasaur/dockerized-react:latest
             credentials:
               username: ${{github.actor}}
               password: ${{secrets.GITHUB_TOKEN}}
