@@ -1,0 +1,50 @@
+name: Deploy Image to GHCR and run tests
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+      push-dockerized-react-image:
+        runs-on: ubuntu-latest
+        steps:
+          - name: 'Checkout GitHub Action'
+            uses: actions/checkout@master
+
+          - name: 'Login to GitHub Container Registry'
+            uses: docker/login-action@v1
+            with:
+              registry: ghcr.io
+              username: ${{github.actor}}
+              password: ${{secrets.GITHUB_TOKEN}}
+
+          - name: 'Build Inventory Image'
+            run: |
+              docker build . --tag ghcr.io/Joelasaur/dockerized-react:latest
+              docker push ghcr.io/Joelasaur/dockerized-react:latest
+              
+      run-cypress:
+        needs: ['push-dockerized-react-image']
+        runs-on: ubuntu-latest
+        container: cypress/browsers:node16.14.0-chrome99-ff97
+        services:
+          react-app: 
+            image: ghcr.io/Joelasaur/dockerized-react:latest
+            credentials:
+              username: ${{github.actor}}
+              password: ${{secrets.GITHUB_TOKEN}}
+            ports:
+              - 3000:3000
+        steps:
+          - name: 'Checkout GitHub Action'
+            uses: actions/checkout@master
+
+          - name: Run Cypress Tests
+            uses: cypress-io/github-action@v5.2.0
+            with:
+              browser: chrome
+              install: true
+              wait-on: 'http://localhost:3000'
+              wait-on-timeout: 120
