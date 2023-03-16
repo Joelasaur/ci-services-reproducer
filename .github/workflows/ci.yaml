@@ -8,7 +8,7 @@ on:
 
 env:
   REGISTRY: hub.docker.com
-  IMAGE_NAME: joelasaur1/ci-services-reproducer
+  IMAGE_NAME: ${{ secrets.DOCKER_HUB_USERNAME }}/ci-services-reproducer
 
 jobs:
       push-dockerized-react-image:
@@ -34,13 +34,13 @@ jobs:
               username: ${{secrets.DOCKER_HUB_USERNAME}}
               password: ${{secrets.DOCKER_HUB_PAT}}
 
-          - name: 'Build and Push React Image'
-            uses: docker/build-push-action@v4
-            with:
-              context: .
-              push: true
-              tags: ${{ steps.meta.outputs.tags }}
-              labels: ${{ steps.meta.outputs.labels }}
+          - name: Build React Image
+            run: |
+              docker build . --tag ${{ env.IMAGE_NAME }}:master
+
+          - name: Push React Image
+            run: |
+              docker push ${{ env.IMAGE_NAME }}:master
 
       run-cypress:
         needs: ['push-dockerized-react-image']
