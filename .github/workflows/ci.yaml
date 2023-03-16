@@ -1,4 +1,4 @@
-name: Deploy Image to GHCR and run tests
+name: Deploy Image to Docker Hub and run tests
 
 on:
   push:
@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY: hub.docker.com
-  IMAGE_NAME: ${{ github.repository }}
+  REGISTRY: hub.docker.coms
+  IMAGE_NAME: joelasaur1/ci-services-reproducer
 
 jobs:
       push-dockerized-react-image:
