@@ -7,10 +7,10 @@ WORKDIR /app
 # Copy app files
 COPY . .
 # ==== BUILD =====
-# Install dependencies (npm ci makes sure the exact versions in the lockfile gets installed)
-RUN npm ci 
+# Install dependencies
+RUN yarn install --frozen-lockfile 
 # Build the app
-RUN npm run build
+RUN yarn build
 # ==== RUN =======
 # Set the env to "production"
 ENV NODE_ENV production

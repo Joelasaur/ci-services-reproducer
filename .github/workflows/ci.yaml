@@ -20,7 +20,7 @@ jobs:
               username: ${{github.actor}}
               password: ${{secrets.GITHUB_TOKEN}}
 
-          - name: 'Build Inventory Image'
+          - name: 'Build React Image'
             run: |
               docker build . --tag ghcr.io/joelasaur/dockerized-react:latest
               docker push ghcr.io/joelasaur/dockerized-react:latest
