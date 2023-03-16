@@ -46,6 +46,8 @@ jobs:
       run-cypress:
         needs: ['push-dockerized-react-image']
         runs-on: ubuntu-latest
+        permissions:
+          contents: read
         container: cypress/browsers:node16.14.0-chrome99-ff97
         services:
           react-app: 
