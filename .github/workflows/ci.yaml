@@ -19,7 +19,8 @@ jobs:
           - name: Check registry for existing image
             id: image-exists
             run: |
-              echo "docker manifest inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}" > $GITHUB_OUTPUT
+              docker manifest inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+              echo $? >> $GITHUB_OUTPUT
 
       push-dockerized-react-image:
         needs: ['does-image-exist']
