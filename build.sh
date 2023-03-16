@@ -1,2 +1,2 @@
-docker build . --no-cache -t dockerized-react
-docker images | grep dockerized-react
+docker build . -t joelasaur1/ci-services-reproducer
+docker images | grep joelasaur1/ci-services-reproducer

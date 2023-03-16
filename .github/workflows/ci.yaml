@@ -11,36 +11,30 @@ env:
   IMAGE_NAME: ${{ secrets.DOCKER_HUB_USERNAME }}/ci-services-reproducer
 
 jobs:
-      push-dockerized-react-image:
-        runs-on: ubuntu-latest
-        outputs: 
-          image_name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-        permissions:
-          contents: read
-          packages: write
-        steps:
-          - name: 'Checkout GitHub Action'
-            uses: actions/checkout@master
+      # Doesn't work, need to build and push locally. 
+      # ERROR: error parsing HTTP 404 response body: invalid character '<' looking for beginning of value:
+      # https://github.com/Joelasaur/ci-services-reproducer/actions/runs/4440873200/jobs/7795336850
+      # push-dockerized-react-image:
+      #   runs-on: ubuntu-latest
+      #   outputs: 
+      #     image_name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      #   steps:
+      #     - name: 'Checkout GitHub Action'
+      #       uses: actions/checkout@master
 
-          - name: Docker meta
-            id: meta
-            uses: docker/metadata-action@v4
-            with:
-              images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      #     - name: 'Login to Docker Container Registry'
+      #       uses: docker/login-action@v1
+      #       with:
+      #         username: ${{secrets.DOCKER_HUB_USERNAME}}
+      #         password: ${{secrets.DOCKER_HUB_PAT}}
 
-          - name: 'Login to Docker Container Registry'
-            uses: docker/login-action@v1
-            with:
-              username: ${{secrets.DOCKER_HUB_USERNAME}}
-              password: ${{secrets.DOCKER_HUB_PAT}}
+      #     - name: Build React Image
+      #       run: |
+      #         docker build . --tag ${{ env.IMAGE_NAME }}:master
 
-          - name: Build React Image
-            run: |
-              docker build . --tag ${{ env.IMAGE_NAME }}:master
-
-          - name: Push React Image
-            run: |
-              docker push ${{ env.IMAGE_NAME }}:master
+      #     - name: Push React Image
+      #       run: |
+      #         docker push ${{ env.IMAGE_NAME }}:master
 
       run-cypress:
         needs: ['push-dockerized-react-image']
@@ -51,9 +45,9 @@ jobs:
         services:
           react-app: 
             # Apparently global env variables don't work across jobs in github actions
-            image: needs.push-dockerized-react-image.outputs.image_name
+            image: docker.io/joelasaur1/ci-services-reproducer:local
             credentials:
-              username: $${{secrets.DOCKER_HUB_USERNAME}}
+              username: ${{secrets.DOCKER_HUB_USERNAME}}
               password: ${{secrets.DOCKER_HUB_PAT}}
             ports:
               - 3000:3000
