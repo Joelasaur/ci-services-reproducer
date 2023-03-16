@@ -12,9 +12,9 @@ env:
 
 jobs:
       push-dockerized-react-image:
-        needs: ['does-image-exist']
         runs-on: ubuntu-latest
-        if: ${{ !needs.does-image-exist.outputs.image-exists }}
+        outputs: 
+          image_name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         permissions:
           contents: read
           packages: write
@@ -51,7 +51,7 @@ jobs:
         services:
           react-app: 
             # Apparently global env variables don't work across jobs in github actions
-            image: needs.does-image-exist.outputs.image_name
+            image: needs.push-dockerized-react-image.outputs.image_name
             credentials:
               username: $${{secrets.DOCKER_HUB_USERNAME}}
               password: ${{secrets.DOCKER_HUB_PAT}}
