@@ -51,6 +51,12 @@ jobs:
             ports:
               - 3000:3000
         steps:
+          - name: Check running website
+            run: sleep 20 && curl http://localhost:3000
+          
+          - name: Change cache permissions 
+            run: chown -R 1001:1001 /github/home/.cache && echo "Changing cachce permissions"
+            
           - name: 'Checkout GitHub Action'
             uses: actions/checkout@master
 
