@@ -21,7 +21,8 @@ jobs:
             # Make username lowercase and echo the status of the inspect command to github output
             # 0 exit code means the image exists, 1 means it does not. 
             run: |
-              docker manifest inspect $(echo ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]')
+              LOWER_IMAGE_NAME="$(echo ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:master | awk '{print tolower($0)}')"  
+              docker manifest inspect $LOWER_IMAGE_NAME
               echo $? >> $GITHUB_OUTPUT
 
       push-dockerized-react-image:
