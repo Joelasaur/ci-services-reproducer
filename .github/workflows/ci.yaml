@@ -55,7 +55,7 @@ jobs:
             run: sleep 20 && curl http://localhost:3000
 
           - name: 'Checkout GitHub Action'
-            uses: actions/checkout@docker-socket-solution
+            uses: actions/checkout@master
 
           - name: Run Cypress Tests
             run: |
