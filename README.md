@@ -29,14 +29,26 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-## Building and running the docker container 
+## Building and running the react app image
 
 ```bash
 ./build.sh
 docker run -p 3000:3000 -d dockerized-react
 ```
 
-## Running Cypress
+Or run the published image. Might need an access token to pull this, ask me for one.
+
+```bash
+docker run -d -p 3000:3000 --name react-app docker.io/joelasaur1/ci-services-reproducer:local
+```
+
+## Running Cypress container
+
+```bash
+docker run -it -v $PWD:/e2e -w /e2e --network="host" cypress/included:12.3.0   
+```
+
+## Running Cypress locally
 
 ```bash
 yarn cy:open

@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - docker-socket-solution
   workflow_dispatch:
 
 env:
@@ -54,12 +55,9 @@ jobs:
             run: sleep 20 && curl http://localhost:3000
 
           - name: 'Checkout GitHub Action'
-            uses: actions/checkout@master
+            uses: actions/checkout@docker-socket-solution
 
           - name: Run Cypress Tests
-            uses: cypress-io/github-action@v5.2.0
-            with:
-              browser: chrome
-              install: true
-              wait-on: 'http://localhost:3000'
-              wait-on-timeout: 120
+            run: |
+              docker run -it -v $PWD:/e2e -w /e2e --network="host" -v /var/run/docker.sock:/var/run/docker.sock cypress/included:12.3.0 
+            
