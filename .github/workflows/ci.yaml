@@ -59,5 +59,5 @@ jobs:
 
           - name: Run Cypress Tests
             run: |
-              docker run -it -v $PWD:/e2e -w /e2e --network="host" -v /var/run/docker.sock:/var/run/docker.sock cypress/included:12.3.0 
+              docker run -v $PWD:/e2e -w /e2e --network="host" -v /var/run/docker.sock:/var/run/docker.sock cypress/included:12.3.0 
             
