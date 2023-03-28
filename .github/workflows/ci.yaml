@@ -51,7 +51,7 @@ jobs:
               - 3000:3000
           cypress: 
             image: cypress/included:12.3.0
-            options: --workdir /e2e --name cypress-service /home/runner/work/ci-services-reproducer/ci-services-reproducer:/e2e --entrypoint="tail -f /dev/null"
+            options: --workdir /e2e --name cypress-service -v /home/runner/work/ci-services-reproducer/ci-services-reproducer:/e2e --entrypoint="tail -f /dev/null"
             env:
               CYPRESS_BASE_URL: http://react-app:3000
         steps:
