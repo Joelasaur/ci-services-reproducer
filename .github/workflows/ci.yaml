@@ -51,9 +51,7 @@ jobs:
               - 3000:3000
           cypress: 
             image: cypress/included:12.3.0
-            volumes:
-              - $PWD:/e2e
-            options: --workdir /e2e --name cypress-service
+            options: --workdir /e2e --name cypress-service -v $PWD:/e2e
             env:
               CYPRESS_BASE_URL: http://react-app:3000
         steps:
