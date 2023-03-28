@@ -50,8 +50,11 @@ jobs:
             ports:
               - 3000:3000
           cypress: 
-            image: cypress/included:12.3.0
-            options: --workdir /e2e --name cypress-service -v /home/runner/work/ci-services-reproducer/ci-services-reproducer:/e2e --entrypoint=tail
+            image: docker.io/joelasaur1/cypress-ci-entrypoint:local
+            credentials:
+              username: ${{secrets.DOCKER_HUB_USERNAME}}
+              password: ${{secrets.DOCKER_HUB_PAT}}
+            options: --workdir /e2e --name cypress-service -v /home/runner/work/ci-services-reproducer/ci-services-reproducer:/e2e
             env:
               CYPRESS_BASE_URL: http://react-app:3000
         steps:
