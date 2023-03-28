@@ -43,13 +43,19 @@ jobs:
           contents: read
         services:
           react-app: 
-            # Apparently global env variables don't work across jobs in github actions
             image: docker.io/joelasaur1/ci-services-reproducer:local
             credentials:
               username: ${{secrets.DOCKER_HUB_USERNAME}}
               password: ${{secrets.DOCKER_HUB_PAT}}
             ports:
               - 3000:3000
+          cypress: 
+            image: cypress/included:12.3.0
+            volumes:
+              - $PWD:/e2e
+            options: --workdir /e2e --name cypress-service
+            env:
+              CYPRESS_BASE_URL: http://react-app:3000
         steps:
           - name: Check running website
             run: sleep 20 && curl http://localhost:3000
@@ -59,5 +65,5 @@ jobs:
 
           - name: Run Cypress Tests
             run: |
-              docker run -v $PWD:/e2e -w /e2e --network="host" cypress/included:12.3.0 
+              docker exec cypress-service cypress run 
             
