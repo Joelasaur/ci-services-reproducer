@@ -51,10 +51,12 @@ jobs:
               - 3000:3000
           cypress: 
             image: cypress/included:12.3.0
-            options: --workdir /e2e --name cypress-service -v $PWD:/e2e
+            options: --workdir /e2e --name cypress-service
             env:
               CYPRESS_BASE_URL: http://react-app:3000
         steps:
+          - name: what is the current directory
+            run: pwd
           - name: Check running website
             run: sleep 20 && curl http://localhost:3000
 
