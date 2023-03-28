@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - docker-socket-solution
   workflow_dispatch:
 
 env:
@@ -42,14 +43,23 @@ jobs:
           contents: read
         services:
           react-app: 
-            # Apparently global env variables don't work across jobs in github actions
             image: docker.io/joelasaur1/ci-services-reproducer:local
             credentials:
               username: ${{secrets.DOCKER_HUB_USERNAME}}
               password: ${{secrets.DOCKER_HUB_PAT}}
             ports:
               - 3000:3000
+          cypress: 
+            image: docker.io/joelasaur1/cypress-ci-entrypoint:local
+            credentials:
+              username: ${{secrets.DOCKER_HUB_USERNAME}}
+              password: ${{secrets.DOCKER_HUB_PAT}}
+            options: --workdir /e2e --name cypress-service -v /home/runner/work/ci-services-reproducer/ci-services-reproducer:/e2e
+            env:
+              CYPRESS_BASE_URL: http://react-app:3000
         steps:
+          - name: what is the current directory
+            run: pwd
           - name: Check running website
             run: sleep 20 && curl http://localhost:3000
 
@@ -57,9 +67,6 @@ jobs:
             uses: actions/checkout@master
 
           - name: Run Cypress Tests
-            uses: cypress-io/github-action@v5.2.0
-            with:
-              browser: chrome
-              install: true
-              wait-on: 'http://localhost:3000'
-              wait-on-timeout: 120
+            run: |
+              docker exec cypress-service cypress run 
+            
