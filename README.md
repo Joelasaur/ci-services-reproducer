@@ -33,7 +33,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ```bash
 ./build.sh
-docker run -p 3000:3000 -d dockerized-react
+docker run -p 3000:3000 -d joelasaur1/ci-services-reproducer:local
 ```
 
 Or run the published image. Might need an access token to pull this, ask me for one.
